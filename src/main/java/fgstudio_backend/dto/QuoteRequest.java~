@@ -1,0 +1,4 @@
+package fgstudio_backend.dto;
+
+public class QuoteRequest {
+}

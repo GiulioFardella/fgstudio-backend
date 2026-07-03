@@ -1,4 +1,4 @@
-package it.fgstudio.fgstudio_backend;
+package fgstudio_backend;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

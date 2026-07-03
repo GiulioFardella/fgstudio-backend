@@ -1,4 +1,4 @@
-package it.fgstudio.fgstudio_backend;
+package fgstudio_backend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
