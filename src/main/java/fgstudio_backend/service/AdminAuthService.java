@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class AdminAuthService {
 
+    private static final String ADMIN_USERNAME = "admin";
+
     private final AuthenticationManager authenticationManager;
 
     public AdminAuthService(AuthenticationManager authenticationManager) {
@@ -18,7 +20,7 @@ public class AdminAuthService {
     public Authentication authenticate(AdminLoginRequest request) {
         return authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getUsername().trim(),
+                        ADMIN_USERNAME,
                         request.getPassword()
                 )
         );

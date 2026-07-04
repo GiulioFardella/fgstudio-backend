@@ -46,13 +46,10 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-
                         .requestMatchers(HttpMethod.POST, "/api/contact").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/quote").permitAll()
-
                         .requestMatchers(HttpMethod.POST, "/api/admin/auth/login").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
-
                         .anyRequest().denyAll()
                 );
 
@@ -66,16 +63,15 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService(
-            @Value("${app.admin.username}") String username,
             @Value("${app.admin.password-hash}") String passwordHash
     ) {
-        if (username.isBlank() || passwordHash.isBlank()) {
+        if (passwordHash.isBlank()) {
             throw new IllegalStateException(
-                    "ADMIN_USERNAME e ADMIN_PASSWORD_HASH devono essere configurati."
+                    "ADMIN_PASSWORD_HASH deve essere configurata."
             );
         }
 
-        UserDetails admin = User.withUsername(username.trim())
+        UserDetails admin = User.withUsername("admin")
                 .password(passwordHash)
                 .roles("ADMIN")
                 .build();
