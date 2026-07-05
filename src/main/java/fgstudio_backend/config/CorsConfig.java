@@ -25,8 +25,18 @@ public class CorsConfig {
                         .toList()
         );
 
-        configuration.setAllowedMethods(List.of("GET", "POST", "PATCH", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("Content-Type", "Accept"));
+        configuration.setAllowedMethods(
+                List.of("GET", "POST", "PATCH", "OPTIONS")
+        );
+
+        configuration.setAllowedHeaders(
+                List.of(
+                        "Content-Type",
+                        "Accept",
+                        "X-XSRF-TOKEN"
+                )
+        );
+
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source =

@@ -27,12 +27,15 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors(Customizer.withDefaults())
-                .csrf(csrf -> csrf.ignoringRequestMatchers(
-                        "/api/contact",
-                        "/api/quote",
-                        "/api/admin/auth/login",
-                        "/api/admin/auth/logout"
-                ))
+                .csrf(csrf -> csrf
+                        .spa()
+                        .ignoringRequestMatchers(
+                                "/api/contact",
+                                "/api/quote",
+                                "/api/admin/auth/login",
+                                "/api/admin/auth/logout"
+                        )
+                )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 )
@@ -46,10 +49,13 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
                         .requestMatchers(HttpMethod.POST, "/api/contact").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/quote").permitAll()
+
                         .requestMatchers(HttpMethod.POST, "/api/admin/auth/login").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
+
                         .anyRequest().denyAll()
                 );
 
