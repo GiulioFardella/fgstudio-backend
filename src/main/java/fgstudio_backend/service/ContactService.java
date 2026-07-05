@@ -2,6 +2,7 @@ package fgstudio_backend.service;
 
 import fgstudio_backend.dto.AdminContactDetail;
 import fgstudio_backend.dto.AdminRequestSummary;
+import fgstudio_backend.dto.AdminRequestUpdate;
 import fgstudio_backend.dto.ContactRequest;
 import fgstudio_backend.entity.ContactMessage;
 import fgstudio_backend.exception.ResourceNotFoundException;
@@ -63,6 +64,25 @@ public class ContactService {
                 );
 
         return toAdminDetail(contact);
+    }
+
+    @Transactional
+    public AdminContactDetail updateForAdmin(
+            Long id,
+            AdminRequestUpdate request
+    ) {
+        ContactMessage contact = contactMessageRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Richiesta non trovata.")
+                );
+
+        contact.setStatus(request.getStatus());
+        contact.setAdminNote(cleanOptional(request.getAdminNote()));
+
+        ContactMessage savedContact =
+                contactMessageRepository.saveAndFlush(contact);
+
+        return toAdminDetail(savedContact);
     }
 
     private AdminRequestSummary toAdminSummary(ContactMessage contact) {

@@ -2,9 +2,13 @@ package fgstudio_backend.controller;
 
 import fgstudio_backend.dto.AdminContactDetail;
 import fgstudio_backend.dto.AdminRequestSummary;
+import fgstudio_backend.dto.AdminRequestUpdate;
 import fgstudio_backend.service.ContactService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,5 +32,13 @@ public class AdminContactController {
     @GetMapping("/{id}")
     public AdminContactDetail getContactById(@PathVariable Long id) {
         return contactService.getByIdForAdmin(id);
+    }
+
+    @PatchMapping("/{id}")
+    public AdminContactDetail updateContact(
+            @PathVariable Long id,
+            @Valid @RequestBody AdminRequestUpdate request
+    ) {
+        return contactService.updateForAdmin(id, request);
     }
 }

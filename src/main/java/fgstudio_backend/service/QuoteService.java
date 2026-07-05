@@ -2,6 +2,7 @@ package fgstudio_backend.service;
 
 import fgstudio_backend.dto.AdminQuoteDetail;
 import fgstudio_backend.dto.AdminRequestSummary;
+import fgstudio_backend.dto.AdminRequestUpdate;
 import fgstudio_backend.dto.QuoteRequest;
 import fgstudio_backend.entity.QuoteRequestEntity;
 import fgstudio_backend.exception.ResourceNotFoundException;
@@ -72,6 +73,25 @@ public class QuoteService {
                 );
 
         return toAdminDetail(quote);
+    }
+
+    @Transactional
+    public AdminQuoteDetail updateForAdmin(
+            Long id,
+            AdminRequestUpdate request
+    ) {
+        QuoteRequestEntity quote = quoteRequestRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Richiesta non trovata.")
+                );
+
+        quote.setStatus(request.getStatus());
+        quote.setAdminNote(cleanOptional(request.getAdminNote()));
+
+        QuoteRequestEntity savedQuote =
+                quoteRequestRepository.saveAndFlush(quote);
+
+        return toAdminDetail(savedQuote);
     }
 
     private AdminRequestSummary toAdminSummary(QuoteRequestEntity quote) {
