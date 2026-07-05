@@ -1,17 +1,24 @@
 package fgstudio_backend.service;
 
+import fgstudio_backend.dto.AdminQuoteDetail;
+import fgstudio_backend.dto.AdminRequestSummary;
 import fgstudio_backend.dto.QuoteRequest;
 import fgstudio_backend.entity.QuoteRequestEntity;
+import fgstudio_backend.exception.ResourceNotFoundException;
 import fgstudio_backend.repository.QuoteRequestRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class QuoteService {
 
-    private static final Logger log = LoggerFactory.getLogger(QuoteService.class);
+    private static final Logger log =
+            LoggerFactory.getLogger(QuoteService.class);
 
     private final QuoteRequestRepository quoteRequestRepository;
 
@@ -46,6 +53,57 @@ public class QuoteService {
         quoteRequestRepository.save(quote);
 
         log.info("New quote request saved.");
+    }
+
+    @Transactional(readOnly = true)
+    public List<AdminRequestSummary> getAllForAdmin() {
+        return quoteRequestRepository
+                .findAll(Sort.by(Sort.Direction.DESC, "createdAt"))
+                .stream()
+                .map(this::toAdminSummary)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public AdminQuoteDetail getByIdForAdmin(Long id) {
+        QuoteRequestEntity quote = quoteRequestRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Richiesta non trovata.")
+                );
+
+        return toAdminDetail(quote);
+    }
+
+    private AdminRequestSummary toAdminSummary(QuoteRequestEntity quote) {
+        return new AdminRequestSummary(
+                quote.getId(),
+                quote.getName(),
+                quote.getEmail(),
+                quote.getStatus(),
+                quote.getCreatedAt()
+        );
+    }
+
+    private AdminQuoteDetail toAdminDetail(QuoteRequestEntity quote) {
+        return new AdminQuoteDetail(
+                quote.getId(),
+                quote.getName(),
+                quote.getEmail(),
+                quote.getPhone(),
+                quote.getCompany(),
+                quote.getSector(),
+                quote.getSiteType(),
+                quote.getGoal(),
+                quote.getExistingSite(),
+                quote.getBudget(),
+                quote.getTimeline(),
+                quote.getMessage(),
+                quote.getConsent(),
+                quote.getStatus(),
+                quote.getAdminNote(),
+                quote.getCreatedAt(),
+                quote.getUpdatedAt()
+        );
     }
 
     private boolean isHoneypotFilled(String website) {

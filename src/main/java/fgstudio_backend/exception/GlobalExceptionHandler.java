@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+    private static final Logger log =
+            LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse> handleValidationError(
@@ -39,6 +40,15 @@ public class GlobalExceptionHandler {
     ) {
         return ResponseEntity.badRequest().body(
                 ApiResponse.error("Richiesta non valida.")
+        );
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ApiResponse> handleNotFound(
+            ResourceNotFoundException exception
+    ) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                ApiResponse.error(exception.getMessage())
         );
     }
 
