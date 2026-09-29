@@ -9,7 +9,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
+import org.springframework.security.authentication.BadCredentialsException;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -51,7 +51,14 @@ public class GlobalExceptionHandler {
                 ApiResponse.error(exception.getMessage())
         );
     }
-
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ApiResponse> handleBadCredentials(
+            BadCredentialsException exception
+    ) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+                ApiResponse.error("Password non corretta.")
+        );
+    }
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse> handleGenericError(Exception exception) {
         log.error("Unexpected backend error.", exception);
