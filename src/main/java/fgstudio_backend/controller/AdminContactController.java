@@ -5,6 +5,8 @@ import fgstudio_backend.dto.AdminRequestSummary;
 import fgstudio_backend.dto.AdminRequestUpdate;
 import fgstudio_backend.service.ContactService;
 import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,5 +42,11 @@ public class AdminContactController {
             @Valid @RequestBody AdminRequestUpdate request
     ) {
         return contactService.updateForAdmin(id, request);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteContact(@PathVariable Long id) {
+        contactService.deleteForAdmin(id);
+        return ResponseEntity.noContent().build();
     }
 }

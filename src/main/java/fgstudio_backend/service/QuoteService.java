@@ -94,6 +94,18 @@ public class QuoteService {
         return toAdminDetail(savedQuote);
     }
 
+    @Transactional
+    public void deleteForAdmin(Long id) {
+        QuoteRequestEntity quote = quoteRequestRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Richiesta non trovata.")
+                );
+
+        quoteRequestRepository.delete(quote);
+
+        log.info("Quote request deleted.");
+    }
+
     private AdminRequestSummary toAdminSummary(QuoteRequestEntity quote) {
         return new AdminRequestSummary(
                 quote.getId(),

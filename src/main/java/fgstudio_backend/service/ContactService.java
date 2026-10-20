@@ -85,6 +85,18 @@ public class ContactService {
         return toAdminDetail(savedContact);
     }
 
+    @Transactional
+    public void deleteForAdmin(Long id) {
+        ContactMessage contact = contactMessageRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Richiesta non trovata.")
+                );
+
+        contactMessageRepository.delete(contact);
+
+        log.info("Contact request deleted.");
+    }
+
     private AdminRequestSummary toAdminSummary(ContactMessage contact) {
         return new AdminRequestSummary(
                 contact.getId(),
