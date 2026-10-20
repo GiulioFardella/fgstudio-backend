@@ -33,7 +33,8 @@ public class CorsConfig {
                 List.of(
                         "Content-Type",
                         "Accept",
-                        "X-XSRF-TOKEN"
+                        "X-XSRF-TOKEN",
+                        "X-CSRF-TOKEN"
                 )
         );
 
